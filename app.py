@@ -1,20 +1,20 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
 
 # Load the dataset (assuming 'selected_stroke_data.csv' is your dataset)
 selected_stroke_data = pd.read_csv('selected_stroke_data.csv')
 
-# Replace missing values (if any)
-selected_stroke_data.fillna(selected_stroke_data.mean(), inplace=True)
+# Perform KNN imputation
+imputer = KNNImputer(n_neighbors=5)
+selected_stroke_data_imputed = pd.DataFrame(imputer.fit_transform(selected_stroke_data), columns=selected_stroke_data.columns)
 
 # Separate features and target
-X = selected_stroke_data.drop(columns=['Age'])
-y = selected_stroke_data['Age']
+X = selected_stroke_data_imputed.drop(columns=['Age'])
+y = selected_stroke_data_imputed['Age']
 
 # Splitting the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -71,9 +71,6 @@ user_data = pd.DataFrame({
     "Carotid Stenosis": [carotid_stenosis]
 })
 
-# Handle missing values in user input (if any)
-user_data.fillna(selected_stroke_data.mean(), inplace=True)
-
 # Standardize user input
 user_data_scaled = scaler.transform(user_data)
 
@@ -82,6 +79,6 @@ prediction = model.predict(user_data_scaled)
 
 # Display prediction result with color and alarm
 if prediction[0] == 1:
-    st.error("## ⚠️ Caution! The model predicts that the patient is at risk of a brain stroke.")
+    st.markdown('<p style="color:red; font-size: 20px;">⚠️ Caution! The model predicts that the patient is at risk of a brain stroke.</p>', unsafe_allow_html=True)
 else:
-    st.success("## ✅ Good news! The model predicts that the patient is not at risk of a brain stroke.")
+    st.markdown('<p style="color:green; font-size: 20px;">✅ Good news! The model predicts that the patient is not at risk of a brain stroke.</p>', unsafe_allow_html=True)

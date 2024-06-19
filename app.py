@@ -4,9 +4,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
+import numpy as np
 
 # Load the dataset (assuming 'selected_stroke_data.csv' is your dataset)
 selected_stroke_data = pd.read_csv('selected_stroke_data.csv')
+
+# Replace non-numeric values with NaN
+selected_stroke_data = selected_stroke_data.apply(pd.to_numeric, errors='coerce')
 
 # Perform KNN imputation
 imputer = KNNImputer(n_neighbors=5)

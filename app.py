@@ -9,6 +9,9 @@ import numpy as np
 # Load the dataset (assuming 'selected_stroke_data.csv' is your dataset)
 selected_stroke_data = pd.read_csv('selected_stroke_data.csv')
 
+# Normalize column names to lower case
+selected_stroke_data.columns = selected_stroke_data.columns.str.lower()
+
 # Replace non-numeric values with NaN
 selected_stroke_data = selected_stroke_data.apply(pd.to_numeric, errors='coerce')
 
@@ -17,8 +20,8 @@ imputer = KNNImputer(n_neighbors=5)
 selected_stroke_data_imputed = pd.DataFrame(imputer.fit_transform(selected_stroke_data), columns=selected_stroke_data.columns)
 
 # Separate features and target
-X = selected_stroke_data_imputed.drop(columns=['Age'])
-y = selected_stroke_data_imputed['Age']
+X = selected_stroke_data_imputed.drop(columns=['age'])
+y = selected_stroke_data_imputed['age']
 
 # Splitting the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -40,7 +43,7 @@ st.write("""
 """)
 
 # Collect user input
-age = st.slider("Age", int(selected_stroke_data_imputed['Age'].min()), int(selected_stroke_data_imputed['Age'].max()))
+age = st.slider("Age", int(selected_stroke_data_imputed['age'].min()), int(selected_stroke_data_imputed['age'].max()))
 female = st.selectbox("Female", [0, 1])
 hypertension = st.selectbox("Hypertension", [0, 1])
 diabetes = st.selectbox("Diabetes", [0, 1])
@@ -56,23 +59,23 @@ cad = st.selectbox("CAD", [0, 1])
 heart_failure = st.selectbox("Heart Failure", [0, 1])
 carotid_stenosis = st.selectbox("Carotid Stenosis", [0, 1])
 
-# Create user input dataframe
+# Create user input dataframe with normalized column names
 user_data = pd.DataFrame({
-    "Age": [age],
+    "age": [age],
     "female": [female],
-    "Hypertension": [hypertension],
-    "Diabetes": [diabetes],
-    "AFib": [afib],
-    "PFO": [pfo],
-    "Dyslipid": [dyslipid],
-    "Smoke": [smoke],
-    "Live Alone": [live_alone],
-    "Dissection": [dissection],
-    "Previous Stroke": [previous_stroke],
-    "Previous TIA": [previous_tia],
-    "CAD": [cad],
-    "Heart Failure": [heart_failure],
-    "Carotid Stenosis": [carotid_stenosis]
+    "hypertension": [hypertension],
+    "diabetes": [diabetes],
+    "afib": [afib],
+    "pfo": [pfo],
+    "dyslipid": [dyslipid],
+    "smoke": [smoke],
+    "live alone": [live_alone],
+    "dissection": [dissection],
+    "previous stroke": [previous_stroke],
+    "previous tia": [previous_tia],
+    "cad": [cad],
+    "heart failure": [heart_failure],
+    "carotid stenosis": [carotid_stenosis]
 })
 
 # Standardize user input

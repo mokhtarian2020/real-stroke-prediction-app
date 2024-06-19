@@ -4,15 +4,23 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
-import numpy as np
 
-# Perform KNN imputation
+# Load your dataset into selected_stroke_data
+# Example: Assuming you load a CSV file named 'stroke_data.csv'
+selected_stroke_data = pd.read_csv('selected_stroke_data.csv')
+
+# Perform any necessary data preprocessing here
+# Example: Drop rows with missing values
+selected_stroke_data = selected_stroke_data.dropna()
+
+# Perform KNN imputation on relevant columns
+columns_to_impute = ['Age', 'Female', 'Hypertension', 'Diabetes', 'AFib', 'PFO', 'Dyslipid', 'Smoke', 'Live Alone', 'Dissection', 'Previous Stroke', 'Previous TIA', 'CAD', 'Heart Failure', 'Carotid Stenosis']
 imputer = KNNImputer(n_neighbors=5)
-selected_stroke_data_imputed = pd.DataFrame(imputer.fit_transform(selected_stroke_data), columns=selected_stroke_data.columns)
+selected_stroke_data_imputed = pd.DataFrame(imputer.fit_transform(selected_stroke_data[columns_to_impute]), columns=columns_to_impute)
 
 # Separate features and target
-X = selected_stroke_data_imputed.drop(columns=['age'])
-y = selected_stroke_data_imputed['age']
+X = selected_stroke_data_imputed.drop(columns=['Age'])  # Adjust column name as per your actual dataset
+y = selected_stroke_data_imputed['Age']  # Adjust column name as per your actual dataset
 
 # Splitting the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -34,7 +42,7 @@ st.write("""
 """)
 
 # Collect user input
-age = st.slider("Age", int(selected_stroke_data_imputed['age'].min()), int(selected_stroke_data_imputed['age'].max()))
+age = st.slider("Age", int(selected_stroke_data_imputed['Age'].min()), int(selected_stroke_data_imputed['Age'].max()))
 female = st.selectbox("Female", [0, 1])
 hypertension = st.selectbox("Hypertension", [0, 1])
 diabetes = st.selectbox("Diabetes", [0, 1])
@@ -64,7 +72,7 @@ user_data = pd.DataFrame({
     "Dissection": [dissection],
     "Previous Stroke": [previous_stroke],
     "Previous TIA": [previous_tia],
-    "Cad": [cad],
+    "CAD": [cad],
     "Heart Failure": [heart_failure],
     "Carotid Stenosis": [carotid_stenosis]
 })

@@ -55,7 +55,7 @@ carotid_stenosis = st.selectbox("Carotid Stenosis", [0, 1])
 # Create user input dataframe
 user_data = pd.DataFrame({
     "Age": [age],
-    "female": [female],
+    "Female": [female],
     "Hypertension": [hypertension],
     "Diabetes": [diabetes],
     "AFib": [afib],

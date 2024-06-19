@@ -40,7 +40,7 @@ st.write("""
 """)
 
 # Collect user input
-age = st.slider("Age", int(X['Age'].min()), int(X['Age'].max()))
+age = st.slider("Age", int(selected_stroke_data_imputed['Age'].min()), int(selected_stroke_data_imputed['Age'].max()))
 female = st.selectbox("Female", [0, 1])
 hypertension = st.selectbox("Hypertension", [0, 1])
 diabetes = st.selectbox("Diabetes", [0, 1])

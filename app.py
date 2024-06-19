@@ -4,7 +4,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
-from imblearn.over_sampling import SMOTE
 
 # Load the new dataset
 selected_stroke_data = pd.read_csv('selected_stroke_data.csv')
@@ -24,13 +23,9 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# Apply SMOTE to balance the dataset (since it's implied by your context)
-smote = SMOTE(random_state=42)
-X_resampled, y_resampled = smote.fit_resample(X_train_scaled, y_train)
-
 # Train the logistic regression model
 model = LogisticRegression()
-model.fit(X_resampled, y_resampled)
+model.fit(X_train_scaled, y_train)
 
 # Streamlit interface for prediction
 st.title("Brain Stroke Prediction")

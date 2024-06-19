@@ -1,4 +1,4 @@
-Age,female,Hypertension,Diabetes,AFib,PFO,dyslipid,smoke,Live Alone,Dissection,Previous stroke,Previous tia,CAD,Heart Failure,Carotid stenosis
+Age,Female,Hypertension,Diabetes,AFib,PFO,Dyslipid,Smoke,Live Alone,Dissection,Previous Stroke,Previous TIA,CAD,Heart Failure,Carotid Stenosis
 70,0,1,1,0,0,1,,,,1,0,1,0,0
 48,0,0,0,0,1,0,0,0,0,0,0,0,0,0
 72,0,1,0,1,0,0,0,0,0,0,0,0,0,0

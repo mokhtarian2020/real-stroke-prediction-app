@@ -52,21 +52,21 @@ carotid_stenosis = st.selectbox("Carotid Stenosis", [0, 1])
 
 # Create user input dataframe with normalized column names
 user_data = pd.DataFrame({
-    "age": [age],
-    "female": [female],
-    "hypertension": [hypertension],
-    "diabetes": [diabetes],
-    "afib": [afib],
-    "pfo": [pfo],
-    "dyslipid": [dyslipid],
-    "smoke": [smoke],
-    "live alone": [live_alone],
-    "dissection": [dissection],
-    "previous stroke": [previous_stroke],
-    "previous tia": [previous_tia],
-    "cad": [cad],
-    "heart failure": [heart_failure],
-    "carotid stenosis": [carotid_stenosis]
+    "Age": [age],
+    "Female": [female],
+    "Hypertension": [hypertension],
+    "Diabetes": [diabetes],
+    "AFib": [afib],
+    "PFO": [pfo],
+    "Dyslipid": [dyslipid],
+    "Smoke": [smoke],
+    "Live Alone": [live_alone],
+    "Dissection": [dissection],
+    "Previous Stroke": [previous_stroke],
+    "Previous TIA": [previous_tia],
+    "Cad": [cad],
+    "Heart Failure": [heart_failure],
+    "Carotid Stenosis": [carotid_stenosis]
 })
 
 # Standardize user input

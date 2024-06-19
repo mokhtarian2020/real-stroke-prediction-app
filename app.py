@@ -3,13 +3,18 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
 
 # Load the new dataset
 selected_stroke_data = pd.read_csv('selected_stroke_data.csv')
 
-# Display the first few rows to understand the structure
-st.write(selected_stroke_data.head())
+# Convert categorical variables to binary
+binary_cols = ['Female', 'Hypertension', 'Diabetes', 'AFib', 'PFO', 
+               'Dyslipid', 'Smoke', 'Live Alone', 'Dissection', 
+               'Previous Stroke', 'Previous TIA', 'CAD', 
+               'Heart Failure', 'Carotid Stenosis', 'Brain stroke']
+
+for col in binary_cols:
+    selected_stroke_data[col] = selected_stroke_data[col].map({'No': 0, 'Yes': 1})
 
 # Separate features and target variable
 X = selected_stroke_data.drop(columns=['Brain stroke'])

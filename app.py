@@ -1,34 +1,38 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
+from imblearn.over_sampling import SMOTE
 
-# Load the dataset (assuming 'selected_stroke_data.csv' is your dataset)
+# Load the new dataset
 selected_stroke_data = pd.read_csv('selected_stroke_data.csv')
 
-# Perform KNN imputation
-imputer = KNNImputer(n_neighbors=5)
-selected_stroke_data_imputed = pd.DataFrame(imputer.fit_transform(selected_stroke_data), columns=selected_stroke_data.columns)
+# Display the first few rows to understand the structure
+st.write(selected_stroke_data.head())
 
-# Separate features and target
-X = selected_stroke_data_imputed.drop(columns=['Age'])
-y = selected_stroke_data_imputed['Age']
+# Separate features and target variable
+X = selected_stroke_data.drop(columns=['Brain stroke'])
+y = selected_stroke_data['Brain stroke']
 
-# Splitting the dataset into training and testing sets
+# Split the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Standardize numerical features
+# Scale the numerical features (assuming Age is the only continuous variable)
 scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Apply SMOTE to balance the dataset (since it's implied by your context)
+smote = SMOTE(random_state=42)
+X_resampled, y_resampled = smote.fit_resample(X_train_scaled, y_train)
 
 # Train the logistic regression model
 model = LogisticRegression()
-model.fit(X_train, y_train)
+model.fit(X_resampled, y_resampled)
 
-# Streamlit interface
+# Streamlit interface for prediction
 st.title("Brain Stroke Prediction")
 
 st.write("""
@@ -36,49 +40,50 @@ st.write("""
 """)
 
 # Collect user input
-age = st.slider("Age", int(X['Age'].min()), int(X['Age'].max()))
-female = st.selectbox("Female", [0, 1])
-hypertension = st.selectbox("Hypertension", [0, 1])
-diabetes = st.selectbox("Diabetes", [0, 1])
-afib = st.selectbox("AFib", [0, 1])
-pfo = st.selectbox("PFO", [0, 1])
-dyslipid = st.selectbox("Dyslipid", [0, 1])
-smoke = st.selectbox("Smoke", [0, 1])
-live_alone = st.selectbox("Live Alone", [0, 1])
-dissection = st.selectbox("Dissection", [0, 1])
-previous_stroke = st.selectbox("Previous Stroke", [0, 1])
-previous_tia = st.selectbox("Previous TIA", [0, 1])
-cad = st.selectbox("CAD", [0, 1])
-heart_failure = st.selectbox("Heart Failure", [0, 1])
-carotid_stenosis = st.selectbox("Carotid Stenosis", [0, 1])
+age = st.slider("Age", 0, 100)
+female = st.selectbox("Female", ["No", "Yes"])
+hypertension = st.selectbox("Hypertension", ["No", "Yes"])
+diabetes = st.selectbox("Diabetes", ["No", "Yes"])
+afib = st.selectbox("AFib", ["No", "Yes"])
+pfo = st.selectbox("PFO", ["No", "Yes"])
+dyslipid = st.selectbox("Dyslipid", ["No", "Yes"])
+smoke = st.selectbox("Smoke", ["No", "Yes"])
+live_alone = st.selectbox("Live Alone", ["No", "Yes"])
+dissection = st.selectbox("Dissection", ["No", "Yes"])
+previous_stroke = st.selectbox("Previous Stroke", ["No", "Yes"])
+previous_tia = st.selectbox("Previous TIA", ["No", "Yes"])
+cad = st.selectbox("CAD", ["No", "Yes"])
+heart_failure = st.selectbox("Heart Failure", ["No", "Yes"])
+carotid_stenosis = st.selectbox("Carotid Stenosis", ["No", "Yes"])
 
-# Create user input dataframe
-user_data = pd.DataFrame({
+# Preprocess user input
+user_data = {
     "Age": [age],
-    "Female": [female],
-    "Hypertension": [hypertension],
-    "Diabetes": [diabetes],
-    "AFib": [afib],
-    "PFO": [pfo],
-    "Dyslipid": [dyslipid],
-    "Smoke": [smoke],
-    "Live Alone": [live_alone],
-    "Dissection": [dissection],
-    "Previous Stroke": [previous_stroke],
-    "Previous TIA": [previous_tia],
-    "CAD": [cad],
-    "Heart Failure": [heart_failure],
-    "Carotid Stenosis": [carotid_stenosis]
-})
+    "Female": [1 if female == "Yes" else 0],
+    "Hypertension": [1 if hypertension == "Yes" else 0],
+    "Diabetes": [1 if diabetes == "Yes" else 0],
+    "AFib": [1 if afib == "Yes" else 0],
+    "PFO": [1 if pfo == "Yes" else 0],
+    "Dyslipid": [1 if dyslipid == "Yes" else 0],
+    "Smoke": [1 if smoke == "Yes" else 0],
+    "Live Alone": [1 if live_alone == "Yes" else 0],
+    "Dissection": [1 if dissection == "Yes" else 0],
+    "Previous Stroke": [1 if previous_stroke == "Yes" else 0],
+    "Previous TIA": [1 if previous_tia == "Yes" else 0],
+    "CAD": [1 if cad == "Yes" else 0],
+    "Heart Failure": [1 if heart_failure == "Yes" else 0],
+    "Carotid Stenosis": [1 if carotid_stenosis == "Yes" else 0]
+}
 
-# Standardize user input
-user_data_scaled = scaler.transform(user_data)
+user_df = pd.DataFrame(user_data)
+
+# Scale the user input using the same scaler
+user_df_scaled = scaler.transform(user_df)
 
 # Predict the probability of stroke
-prediction = model.predict(user_data_scaled)
+prediction = model.predict(user_df_scaled)
 
-# Display prediction result with color and alarm
 if prediction[0] == 1:
-    st.markdown('<p style="color:red; font-size: 20px;">⚠️ Caution! The model predicts that the patient is at risk of a brain stroke.</p>', unsafe_allow_html=True)
+    st.write("## The model predicts that you are at risk of a brain stroke.")
 else:
-    st.markdown('<p style="color:green; font-size: 20px;">✅ Good news! The model predicts that the patient is not at risk of a brain stroke.</p>', unsafe_allow_html=True)
+    st.write("## The model predicts that you are not at risk of a brain stroke.")

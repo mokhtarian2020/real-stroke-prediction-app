@@ -6,9 +6,6 @@ from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
 import numpy as np
 
-# Normalize column names to lower case
-selected_stroke_data.columns = selected_stroke_data.columns.str.lower()
-
 # Replace non-numeric values with NaN
 selected_stroke_data = selected_stroke_data.apply(pd.to_numeric, errors='coerce')
 

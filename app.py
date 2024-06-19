@@ -6,9 +6,6 @@ from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
 import numpy as np
 
-# Load the dataset (assuming 'selected_stroke_data.csv' is your dataset)
-selected_stroke_data = pd.read_csv('selected_stroke_data.csv')
-
 # Normalize column names to lower case
 selected_stroke_data.columns = selected_stroke_data.columns.str.lower()
 

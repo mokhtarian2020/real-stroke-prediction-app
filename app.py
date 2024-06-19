@@ -6,9 +6,6 @@ from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
 import numpy as np
 
-# Replace non-numeric values with NaN
-selected_stroke_data = selected_stroke_data.apply(pd.to_numeric, errors='coerce')
-
 # Perform KNN imputation
 imputer = KNNImputer(n_neighbors=5)
 selected_stroke_data_imputed = pd.DataFrame(imputer.fit_transform(selected_stroke_data), columns=selected_stroke_data.columns)
